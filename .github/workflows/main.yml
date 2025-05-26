@@ -48,8 +48,8 @@ jobs:
           git lfs install
           git lfs track "mlruns/**"
           git add .gitattributes
-          git commit -m "Track large files in mlruns with Git LFS" || true
-          git push origin main
+          git commit -m "Track large files in mlruns with Git LFS" || echo "No changes to commit"
+          git push origin main || echo "Nothing to push (LFS setup)"
 
       # Save models to GitHub Repository
       - name: Save mlruns to repo
@@ -57,5 +57,5 @@ jobs:
           git config --global user.name ${{ secrets.username }}
           git config --global user.email ${{ secrets.email }}
           git add -f mlruns/
-          git commit -m "Save mlruns from CI run" || true
-          git push origin main
+          git diff --cached --quiet || git commit -m "Save mlruns from CI run"
+          git push origin main || echo "Nothing to push (mlruns)"
